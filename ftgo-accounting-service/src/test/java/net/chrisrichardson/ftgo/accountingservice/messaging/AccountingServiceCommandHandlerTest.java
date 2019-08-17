@@ -2,19 +2,18 @@ package net.chrisrichardson.ftgo.accountingservice.messaging;
 
 import io.eventuate.sync.AggregateRepository;
 import io.eventuate.javaclient.spring.jdbc.EmbeddedTestAggregateStoreConfiguration;
-import io.eventuate.tram.commands.common.ChannelMapping;
-import io.eventuate.tram.commands.common.DefaultChannelMapping;
 import io.eventuate.tram.commands.producer.CommandProducer;
 import io.eventuate.tram.commands.producer.TramCommandProducerConfiguration;
 import io.eventuate.tram.events.publisher.DomainEventPublisher;
 import io.eventuate.tram.events.publisher.TramEventsPublisherConfiguration;
 import io.eventuate.tram.inmemory.TramInMemoryConfiguration;
+import io.eventuate.tram.messaging.common.ChannelMapping;
+import io.eventuate.tram.messaging.common.DefaultChannelMapping;
 import io.eventuate.tram.sagas.common.SagaCommandHeaders;
 import io.eventuate.tram.testutil.TestMessageConsumer;
 import io.eventuate.tram.testutil.TestMessageConsumerFactory;
 import net.chrisrichardson.ftgo.accountingservice.domain.Account;
 import net.chrisrichardson.ftgo.accountingservice.domain.AccountCommand;
-import net.chrisrichardson.ftgo.accountingservice.domain.AuthorizeCommandInternal;
 import net.chrisrichardson.ftgo.accountservice.api.AccountingServiceChannels;
 import net.chrisrichardson.ftgo.accountservice.api.AuthorizeCommand;
 import net.chrisrichardson.ftgo.common.Money;
@@ -59,11 +58,6 @@ public class AccountingServiceCommandHandlerTest {
     }
 
     @Bean
-    public ChannelMapping channelMapping() {
-      return new DefaultChannelMapping.DefaultChannelMappingBuilder().build();
-    }
-
-    @Bean
     public DataSource dataSource() {
       EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
       return builder.setType(EmbeddedDatabaseType.H2)
@@ -90,7 +84,7 @@ public class AccountingServiceCommandHandlerTest {
   private AggregateRepository<Account, AccountCommand> accountRepository;
 
   @Test
-  public void shouldReply() throws InterruptedException, ExecutionException, TimeoutException {
+  public void shouldReply() {
 
     TestMessageConsumer testMessageConsumer = testMessageConsumerFactory.make();
 
